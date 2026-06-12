@@ -1,4 +1,5 @@
 import './style.css';
+import * as THREE from 'three';
 import { createRollController } from './app/rollController';
 import { createHistory } from './core/history';
 import { totalDiceCount } from './core/notation';
@@ -125,6 +126,35 @@ async function main(): Promise<void> {
     });
   }
   updateControls();
+
+  // click/tap a settled die to reroll just that one (others keep their faces)
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  const canvas = sceneCtx.renderer.domElement;
+
+  function dieAt(event: { clientX: number; clientY: number }) {
+    if (controller.isRolling()) return null;
+    const rect = canvas.getBoundingClientRect();
+    pointer.set(
+      ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1,
+    );
+    raycaster.setFromCamera(pointer, sceneCtx.camera);
+    const hit = raycaster.intersectObjects(controller.dice().map((die) => die.mesh))[0];
+    return hit ? (controller.dice().find((die) => die.mesh === hit.object) ?? null) : null;
+  }
+
+  canvas.addEventListener('click', (event) => {
+    const die = dieAt(event);
+    if (die && controller.rerollDie(die)) {
+      toast.hide();
+      needsRender = true;
+    }
+  });
+
+  canvas.addEventListener('pointermove', (event) => {
+    canvas.style.cursor = dieAt(event) ? 'pointer' : '';
+  });
 
   // portrait views the table from a 90° azimuth — spin the tray logo to match
   const applyLogoSpin = (): void =>

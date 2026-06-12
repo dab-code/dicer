@@ -7,23 +7,40 @@ const SPACING = DIE_RADIUS * 2.5;
 const SPAWN_HEIGHT = 5;
 
 /**
- * Place all dice in a spawn grid above one half of the table and hurl them at
- * the middle. The grid is bounded in x and z so it always stays inside the
- * walls; overflow stacks into additional layers above.
+ * Place all dice in a spawn grid above the table along a randomly chosen edge
+ * and hurl them at the middle — varying the approach each roll so identical
+ * trajectories can't bias low-tumble dice like the d4. The grid is bounded so
+ * it always stays inside the walls; overflow stacks into additional layers.
  */
 export function throwDice(dice: DieInstance[], rng: Rng = Math.random): void {
-  const perRow = Math.max(1, Math.floor((TABLE.width - 4) / SPACING));
-  const zRows = Math.max(1, Math.floor((TABLE.depth - 4) / SPACING));
-  const perLayer = perRow * zRows;
+  const side = Math.floor(rng() * 4); // table edge to throw from
+  const alongWall = side < 2 ? TABLE.width : TABLE.depth;
+  const perRow = Math.max(1, Math.floor((alongWall - 4) / SPACING));
+  const rows = Math.max(1, Math.floor(((side < 2 ? TABLE.depth : TABLE.width) - 4) / SPACING));
+  const perLayer = perRow * rows;
   dice.forEach((die, i) => {
     const layer = Math.floor(i / perLayer);
     const idx = i % perLayer;
     const row = Math.floor(idx / perRow);
     const col = idx % perRow;
     const rowCount = Math.min(perRow, dice.length - layer * perLayer - row * perRow);
-    const x = (col - (rowCount - 1) / 2) * SPACING + randRange(-0.4, 0.4, rng);
-    const z = -TABLE.depth / 2 + 2 + row * SPACING + randRange(-0.3, 0.3, rng);
-    launchDie(die, { x, y: SPAWN_HEIGHT + layer * 2.6, z }, rng);
+    // throw-local frame: u along the spawn edge, v stepping toward the center
+    const u = (col - (rowCount - 1) / 2) * SPACING + randRange(-0.6, 0.6, rng);
+    const v = row * SPACING + randRange(-0.3, 0.3, rng);
+    const pos =
+      side === 0
+        ? { x: u, z: -TABLE.depth / 2 + 2 + v }
+        : side === 1
+          ? { x: -u, z: TABLE.depth / 2 - 2 - v }
+          : side === 2
+            ? { x: -TABLE.width / 2 + 2 + v, z: -u }
+            : { x: TABLE.width / 2 - 2 - v, z: u };
+    // height jitter, capped so stacked layers stay clear of the ceiling
+    const y = Math.min(
+      SPAWN_HEIGHT + randRange(0, 1.5, rng) + layer * 2.6,
+      TABLE.wallHeight - DIE_RADIUS - 0.4,
+    );
+    launchDie(die, { ...pos, y }, rng);
   });
 }
 

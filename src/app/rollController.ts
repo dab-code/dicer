@@ -43,6 +43,8 @@ export interface RollController {
   roll(request: RollRequest): void;
   /** Re-throw the last request. Returns false if there is none. */
   reroll(): boolean;
+  /** Rethrow one settled die, keeping the rest. Returns false if unavailable. */
+  rerollDie(die: DieInstance): boolean;
   clear(): void;
   /** Advance settle/read logic; call once per physics step. */
   tick(dtMs: number): void;
@@ -178,6 +180,15 @@ export function createRollController(deps: RollControllerDeps): RollController {
     reroll() {
       if (!request || rolling) return false;
       this.roll(request);
+      return true;
+    },
+
+    rerollDie(die) {
+      if (rolling || !die.read || !dice.includes(die)) return false;
+      die.nudges = 0;
+      die.rerolls = 0; // fresh cocked-recovery budget
+      rethrowSingle(die, rng); // resets tracker, read = null, captures transform
+      setRolling(true);
       return true;
     },
 
