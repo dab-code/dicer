@@ -2,8 +2,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  // served from https://dab-code.github.io/dicer/
-  base: '/dicer/',
+  // served from the custom-domain root (dicer.mykrosr.com — see CNAME)
+  base: '/',
   build: {
     target: 'es2022',
     // the single large chunk is Rapier's inlined WASM — expected
