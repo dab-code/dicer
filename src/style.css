@@ -47,7 +47,7 @@ body {
 #empty-hint {
   position: fixed;
   right: 18px;
-  bottom: 96px;
+  bottom: 88px;
   z-index: 5;
   display: flex;
   flex-direction: column;
@@ -70,8 +70,8 @@ body {
 #empty-hint svg {
   width: 52px;
   height: 52px;
-  /* arrowhead lands over the dice button's center */
-  margin-right: 14px;
+  /* arrowhead lands over the dice button's center (28px from the right inset) */
+  margin-right: 30px;
 }
 
 #empty-hint.hidden {
@@ -87,7 +87,7 @@ body {
 
   #empty-hint svg {
     margin-right: 0;
-    transform: rotate(-55deg);
+    transform: rotate(-75deg);
   }
 }
 
