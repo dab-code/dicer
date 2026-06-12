@@ -42,6 +42,55 @@ body {
   pointer-events: none;
 }
 
+/* first-load nudge anchored above the dice button; hidden for good once the
+   first roll happens */
+#empty-hint {
+  position: fixed;
+  right: 18px;
+  bottom: 96px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  color: var(--muted);
+  text-align: right;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+#empty-hint p {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+#empty-hint svg {
+  width: 52px;
+  height: 52px;
+  /* arrowhead lands over the dice button's center */
+  margin-right: 14px;
+}
+
+#empty-hint.hidden {
+  opacity: 0;
+}
+
+/* desktop has no dice pill — sit beside the open popover, arrow turned at it */
+@media (min-width: 768px) {
+  #empty-hint {
+    right: calc(312px + 16px + 40px);
+    bottom: 220px;
+  }
+
+  #empty-hint svg {
+    margin-right: 0;
+    transform: rotate(-55deg);
+  }
+}
+
 #scene {
   position: relative;
   overflow: hidden;
@@ -229,6 +278,7 @@ button:disabled {
 
 #dock {
   position: fixed;
+  left: max(16px, env(safe-area-inset-left));
   right: max(16px, env(safe-area-inset-right));
   bottom: max(16px, env(safe-area-inset-bottom));
   z-index: 20;
@@ -271,6 +321,26 @@ button:disabled {
 
 .dock-fab:hover:not(:disabled) {
   background: #3a3a41;
+}
+
+/* dice toggle: subtle secondary next to the primary Roll */
+.dock-pill {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  color: var(--ink-soft);
+  box-shadow: 0 10px 28px rgba(31, 31, 35, 0.1);
+}
+
+.dock-pill:hover:not(:disabled) {
+  background: var(--card);
+  color: var(--ink);
+}
+
+/* mobile: Roll stretches across the leftover width beside the dice pill */
+.dock-roll {
+  flex: 1;
+  width: auto;
+  border-radius: 999px;
 }
 
 .pill-die {
@@ -770,8 +840,9 @@ button:disabled {
 }
 
 .settings-thumb {
-  width: 44px;
-  height: 44px;
+  /* matches .settings-btn height so the row reads as one control group */
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   border: 1px solid var(--hairline);
   border-radius: 9px;

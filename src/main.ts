@@ -61,6 +61,7 @@ async function main(): Promise<void> {
 
   function doRoll(): void {
     if (!picker) return;
+    $('#empty-hint').classList.add('hidden');
     toast.hide();
     controller.roll(picker.getRequest());
     needsRender = true;
