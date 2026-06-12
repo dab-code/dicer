@@ -551,6 +551,24 @@ button:disabled {
   line-height: 1;
 }
 
+/* mobile: toast spans the full width so the notation gets room to breathe */
+@media (max-width: 767px) {
+  .toast {
+    left: 12px;
+    right: 12px;
+    justify-content: space-between;
+    transform: translateY(-160%);
+  }
+
+  .toast.visible {
+    transform: translateY(0);
+  }
+
+  .toast-body {
+    flex: 1;
+  }
+}
+
 /* ---- history modal ---- */
 
 .history-modal {
