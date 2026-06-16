@@ -2,3 +2,11 @@ node_modules/
 dist/
 .DS_Store
 .playwright-mcp/
+
+# Android signing — never commit keystores or their credentials
+*.keystore
+*.jks
+keystore.properties
+
+# Android Studio IDE files
+android/.idea/

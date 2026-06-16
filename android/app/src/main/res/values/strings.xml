@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dicer</string>
+    <string name="title_activity_main">Dicer</string>
+    <string name="package_name">com.mykrosr.dicer</string>
+    <string name="custom_url_scheme">com.mykrosr.dicer</string>
+</resources>
