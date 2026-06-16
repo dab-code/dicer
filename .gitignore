@@ -7,3 +7,6 @@ dist/
 *.keystore
 *.jks
 keystore.properties
+
+# Android Studio IDE files
+android/.idea/

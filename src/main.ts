@@ -20,7 +20,7 @@ import { createMobileDock } from './ui/mobileDock';
 import { createSettingsModal } from './ui/settingsModal';
 import { createPicker, type Picker } from './ui/picker';
 import { createToast } from './ui/toast';
-import { hapticRollSettled, initNative } from './native/native';
+import { hapticRollSettled, initNative, setBarStyleForBackground } from './native/native';
 
 async function main(): Promise<void> {
   void initNative();
@@ -45,6 +45,7 @@ async function main(): Promise<void> {
   const trayImage = window.localStorage.getItem(TRAY_IMAGE_KEY);
   sceneCtx.setBackground(trayColor);
   table.setImage(trayImage);
+  void setBarStyleForBackground(trayColor);
 
   const history = createHistory(window.localStorage);
   const toast = createToast($('#toast-root'));
@@ -100,6 +101,7 @@ async function main(): Promise<void> {
     },
     onTrayColor(color) {
       sceneCtx.setBackground(color);
+      void setBarStyleForBackground(color);
       try {
         window.localStorage.setItem(TRAY_COLOR_KEY, color);
       } catch {
