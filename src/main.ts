@@ -1,3 +1,9 @@
+// Self-hosted fonts (bundled into the build) so the offline Android app keeps
+// its typography without reaching the Google Fonts CDN.
+import '@fontsource-variable/bricolage-grotesque/wght.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
 import './style.css';
 import * as THREE from 'three';
 import { createRollController } from './app/rollController';
@@ -14,8 +20,11 @@ import { createMobileDock } from './ui/mobileDock';
 import { createSettingsModal } from './ui/settingsModal';
 import { createPicker, type Picker } from './ui/picker';
 import { createToast } from './ui/toast';
+import { hapticRollSettled, initNative } from './native/native';
 
 async function main(): Promise<void> {
+  void initNative();
+
   const $ = (selector: string): HTMLElement => {
     const el = document.querySelector<HTMLElement>(selector);
     if (!el) throw new Error(`missing element ${selector}`);
@@ -54,6 +63,7 @@ async function main(): Promise<void> {
     onResult(result) {
       toast.show(result);
       historyModal.refresh();
+      void hapticRollSettled();
     },
     onRollingChange() {
       updateControls();

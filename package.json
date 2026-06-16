@@ -7,13 +7,25 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "android:sync": "npm run build && cap sync android",
+    "android:run": "npm run build && cap run android",
+    "android:open": "npm run build && cap sync android && cap open android",
+    "android:icons": "node scripts/generate-app-assets.mjs && cap-assets generate --android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.2",
     "@dimforge/rapier3d-compat": "^0.14.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.2.10",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.4.0",
     "@types/three": "^0.170.0",
     "typescript": "~5.6.0",
     "vite": "^6.0.0",
