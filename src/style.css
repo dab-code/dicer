@@ -55,7 +55,8 @@ body {
 #empty-hint {
   position: fixed;
   right: 18px;
-  bottom: 88px;
+  /* rise with the dice button, which sits --sa-bottom above its old spot */
+  bottom: calc(var(--sa-bottom) + 88px);
   z-index: 5;
   display: flex;
   flex-direction: column;
